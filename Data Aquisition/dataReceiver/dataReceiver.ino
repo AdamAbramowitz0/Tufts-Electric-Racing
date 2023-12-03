@@ -13,8 +13,8 @@ const bool DEBUG_MODE = true;  // set to false if Serial output is not wanted
 
 
 const unsigned long TICK = 100;  // milliseconds per bit
-const uint8_t OUT_PIN = 12;      // a digital pin to send request pings via TODO fill
-const uint8_t IN_PIN = 11;       // a digital pin to receive data via TODO fill
+const uint8_t REQUEST_PIN = 12;      // a digital pin to send request pings via TODO fill
+const uint8_t DATA_PIN = 11;       // a digital pin to receive data via TODO fill
 
 const Bits SENSOR_A_ID = Bits("1010");
 const Bits SENSOR_B_ID = Bits("1111");
@@ -24,8 +24,8 @@ void setup() {
   Debug(begin, 9600);
   Debug(println, "\nDEBUGGING MODE ON");
 
-  pinMode(OUT_PIN, OUTPUT);
-  pinMode(IN_PIN, INPUT);
+  pinMode(REQUEST_PIN, OUTPUT);
+  pinMode(DATA_PIN, INPUT);
 }
 
 // this loop should be a half TICK out of sync w/ Sender
@@ -35,7 +35,7 @@ void loop() {
   pingRequest();
 
   for (int i = 0; i < 4; i++) {
-    bitWrite(data(), i, digitalRead(IN_PIN));
+    bitWrite(data(), i, digitalRead(DATA_PIN));
     delay(TICK);
   }
 
@@ -58,9 +58,9 @@ void loop() {
 // and we can't read until delay is over. Half tick is chosen arbitrarily,
 // since signal length can't be 0 presumably
 void pingRequest() {
-  digitalWrite(OUT_PIN, HIGH);
+  digitalWrite(REQUEST_PIN, HIGH);
   delay(TICK / 2);
-  digitalWrite(OUT_PIN, LOW);
+  digitalWrite(REQUEST_PIN, LOW);
 }
 
 #undef Debug  // idk in case you're #include-ing this file somewhere

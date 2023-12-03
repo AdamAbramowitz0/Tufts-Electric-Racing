@@ -26,8 +26,8 @@ constexpr bool DEBUG_MODE = true;  // set to false if Serial output is not wante
 
 
 constexpr unsigned long TICK = 100;  // milliseconds per bit
-constexpr uint8_t OUT_PIN = 50;      // a digital pin to send data by
-constexpr uint8_t IN_PIN = 7;        // a digital pin to receive the request-bit; TODO: fill
+constexpr uint8_t DATA_PIN = 50;      // a digital pin to send data by
+constexpr uint8_t REQUEST_PIN = 51;        // a digital pin to receive the request-bit; TODO: fill
 
 // Sensor headers
 const Bits SENSOR_A_H = Bits("1010");
@@ -42,11 +42,11 @@ void setup() {
   Debug(println, "DEBUGGING MODE ON");
 
   // setup output line
-  pinMode(OUT_PIN, OUTPUT);
-  pinMode(IN_PIN, INPUT);  // TODO: NOT DECIDED
+  pinMode(DATA_PIN, OUTPUT);
+  pinMode(REQUEST_PIN, INPUT);  // TODO: NOT DECIDED
 
   // initial silence
-  digitalWrite(OUT_PIN, LOW);
+  digitalWrite(DATA_PIN, LOW);
   delay(1000);
 
   // Ping for receiver to start decoding, TODO: remove?
@@ -56,7 +56,6 @@ void setup() {
 void loop() {
 
   if (digitalRead(INPUT) == HIGH) {
-
     // save timestamp of this request for sensor cooldowns
     lastRequestedAt = millis();
 
@@ -83,13 +82,13 @@ void loop() {
 // sets OUT_PIN to HIGH or LOW for a 1 or 0, respectively for a TICK
 // then sets OUT_PIN to low
 void sendBit(bool bit) {
-  digitalWrite(OUT_PIN, bit);
+  digitalWrite(DATA_PIN, bit);
 
   Debug(print, int(bit));
 
   delay(TICK);
   // reset line to 0 after sending
-  digitalWrite(OUT_PIN, LOW);
+  digitalWrite(DATA_PIN, LOW);
 }
 
 void sendBits(Bits bits) {
