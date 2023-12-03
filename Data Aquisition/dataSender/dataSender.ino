@@ -15,25 +15,31 @@
  * 11.12.2023
  */
 
-const bool DEBUG_MODE = true;  // set to false if Serial output is not wanted
+#include "Bits.h"
 
-#define debug(x) \
-  if (DEBUG_MODE) Serial.print(x)
+constexpr bool DEBUG_MODE = true;  // set to false if Serial output is not wanted
 
-const unsigned long TICK = 100;  // milliseconds per bit
-const uint8_t OUT_PIN = 50;      // a digital pin to send data by
-const uint8_t IN_PIN;            // a digital pin to receive the request-bit; TODO: fill
+// Basically a if(DEBUG_MODE) wrapper on Serial statements
+// use with care around if statements, use {} instead of one-lining
+#define Debug(method, ...) \
+  if (DEBUG_MODE) { Serial.method(__VA_ARGS__); }
+
+
+constexpr unsigned long TICK = 100;  // milliseconds per bit
+constexpr uint8_t OUT_PIN = 50;      // a digital pin to send data by
+constexpr uint8_t IN_PIN = 7;        // a digital pin to receive the request-bit; TODO: fill
 
 // Sensor headers
-const String SENSOR_A_ID = "1010";
-const String SENSOR_B_ID = "1111";
-const String SENSOR_C_ID = "0000";
+const Bits SENSOR_A_H = Bits("1010");
+const Bits SENSOR_B_H = Bits("1111");
+const Bits SENSOR_C_H = Bits("0000");
 
 unsigned long lastRequestedAt = 0;  // stores timestamp of most recent request
 
 void setup() {
-  if (DEBUG_MODE) Serial.begin(9600);  // for debugging
-  debug("DEBUGGING MODE ON\n");
+  // for debugging
+  Debug(begin, 9600);
+  Debug(println, "DEBUGGING MODE ON");
 
   // setup output line
   pinMode(OUT_PIN, OUTPUT);
@@ -48,23 +54,27 @@ void setup() {
 }
 
 void loop() {
-  // if (requestBit detected):
+
+  //if (digitalRead(INPUT) == HIGH)
 
   // save timestamp of this request for sensor cooldowns
   lastRequestedAt = millis();
-  debug("LAST REQUESTED AT: ");
-  debug(lastRequestedAt);
-  debug('\n');
 
-  sendBits(SENSOR_A_ID);
+  Debug(print, "LAST REQUESTED AT: ");
+  Debug(println, lastRequestedAt);
+
+  //Debug(println, SENSOR_A_H.str());
+  sendBits(SENSOR_A_H);
+  // sendBits(encodedReadSensorA())
+
+  //Debug(println, SENSOR_B_H.str());
+  sendBits(SENSOR_B_H);
   // sendBits(encodedReadSensorB())
-  sendBits(SENSOR_B_ID);
-  // sendBits(encodedReadSensorB())
-  sendBits(SENSOR_C_ID);
-  // sendBits(encodedReadSensorB())
+
+  //Debug(println, SENSOR_C_H.str());
+  sendBits(SENSOR_C_H);
+  // sendBits(encodedReadSensorC())
   //...
-
-  // end if
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,52 +82,22 @@ void loop() {
 // sets OUT_PIN to HIGH or LOW for a 1 or 0, respectively for a TICK
 // then sets OUT_PIN to low
 void sendBit(bool bit) {
-  if (bit == 1)
-    digitalWrite(OUT_PIN, HIGH);
-  else  // bit == 0
-    digitalWrite(OUT_PIN, LOW);
+  digitalWrite(OUT_PIN, bit);
 
-  debug(int(bit));
+  Debug(print, int(bit));
 
   delay(TICK);
-
   // reset line to 0 after sending
   digitalWrite(OUT_PIN, LOW);
 }
 
-// Interprets and sends string as bits, for human use
-// Note: bit values sent left to right; e.g. sendBits("0010") -> 0, 0, 1, 0
-void sendBits(String str) {
-  for (size_t i = 0; i < str.length(); i++) {
-    if (str[i] != '0' or str[i] != '1')
-      debug("Non '1' or '0' converted to bit\n");
-
-    sendBit(str[i] - '0');  // turns '0' into 0 and '1' into 1
-    debug(str[i] - '0');
-  }
-
-  debug('\n');
-}
-
-// Sends array of bits
-// Note: bit values sent in order; e.g. sendBits({0,0,1,0}) -> 0, 0, 1, 0
-void sendBits(bool bits[], size_t length) {
-  for (size_t i = 0; i < length; i++) {
-    debug(bits[i]);
+void sendBits(Bits bits) {
+  for (uint8_t i = 0; i < bits.size; i++) {
     sendBit(bits[i]);
+    //Debug(print, (int)bits[i])
   }
 
-  debug('\n');
+  Debug(println);  // newline
 }
 
-// for bit-ifying actual data
-// Note: - bit vals sent left to right; e.g. sendBits(0b001010, 4) -> 1, 0, 1, 0
-//       - max bitstring size is 16 bytes = 128 bits = 1 double
-void sendBits(long long bits, size_t length) {
-  for (size_t i = length - 1; i >= 0; i--) {
-    sendBit(bitRead(bits, i));
-    debug(int(bitRead(bits, i)));
-  }
-
-  debug('\n');
-}
+#undef Debug  // idk in case you're #include-ing this file somewhere
