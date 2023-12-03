@@ -30,7 +30,7 @@ constexpr uint8_t DATA_PIN = 50;     // a digital pin to send data by
 constexpr uint8_t REQUEST_PIN = 51;  // a digital pin to receive the request-bit
 
 // Sensor headers
-const Bits SENSOR_A_H = Bits("1010");
+const Bits SENSOR_A_H = Bits("0101");
 const Bits SENSOR_B_H = Bits("1111");
 const Bits SENSOR_C_H = Bits("0000");
 
@@ -58,18 +58,16 @@ void loop() {
     Debug(print, "LAST REQUESTED AT: ");
     Debug(println, lastRequestedAt);
 
-    //Debug(println, SENSOR_A_H.str());
+    Debug(println, SENSOR_A_H.str());
     sendBits(SENSOR_A_H);
-    // sendBits(encodedReadSensorA())
 
-    //Debug(println, SENSOR_B_H.str());
+    Debug(println, SENSOR_B_H.str());
     sendBits(SENSOR_B_H);
-    // sendBits(encodedReadSensorB())
 
-    //Debug(println, SENSOR_C_H.str());
+    Debug(println, SENSOR_C_H.str());
     sendBits(SENSOR_C_H);
-    // sendBits(encodedReadSensorC())
     //...
+
   }
 }
 
