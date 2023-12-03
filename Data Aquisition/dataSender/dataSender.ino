@@ -43,7 +43,7 @@ void setup() {
 
   // setup output line
   pinMode(OUT_PIN, OUTPUT);
-  pinMode(IN_PIN, INPUT); // TODO: NOT DECIDED
+  pinMode(IN_PIN, INPUT);  // TODO: NOT DECIDED
 
   // initial silence
   digitalWrite(OUT_PIN, LOW);
@@ -55,26 +55,27 @@ void setup() {
 
 void loop() {
 
-  //if (digitalRead(INPUT) == HIGH)
+  if (digitalRead(INPUT) == HIGH) {
 
-  // save timestamp of this request for sensor cooldowns
-  lastRequestedAt = millis();
+    // save timestamp of this request for sensor cooldowns
+    lastRequestedAt = millis();
 
-  Debug(print, "LAST REQUESTED AT: ");
-  Debug(println, lastRequestedAt);
+    Debug(print, "LAST REQUESTED AT: ");
+    Debug(println, lastRequestedAt);
 
-  //Debug(println, SENSOR_A_H.str());
-  sendBits(SENSOR_A_H);
-  // sendBits(encodedReadSensorA())
+    //Debug(println, SENSOR_A_H.str());
+    sendBits(SENSOR_A_H);
+    // sendBits(encodedReadSensorA())
 
-  //Debug(println, SENSOR_B_H.str());
-  sendBits(SENSOR_B_H);
-  // sendBits(encodedReadSensorB())
+    //Debug(println, SENSOR_B_H.str());
+    sendBits(SENSOR_B_H);
+    // sendBits(encodedReadSensorB())
 
-  //Debug(println, SENSOR_C_H.str());
-  sendBits(SENSOR_C_H);
-  // sendBits(encodedReadSensorC())
-  //...
+    //Debug(println, SENSOR_C_H.str());
+    sendBits(SENSOR_C_H);
+    // sendBits(encodedReadSensorC())
+    //...
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

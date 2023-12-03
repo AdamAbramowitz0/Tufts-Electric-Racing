@@ -41,15 +41,15 @@ void loop() {
 
   Debug(println, "DATA: "+ data.str());
 
-  // if (SENSOR_A_ID == data) {
-  //   Debug(println, "A");
-  // } else if (SENSOR_B_ID == data) {
-  //   Debug(println, "B");
-  // } else if (SENSOR_C_ID == data) {
-  //   Debug(println, "C");
-  // } else {
-  //   Debug(println, "Not recognized");
-  // }
+  if (SENSOR_A_ID == data) {
+    Debug(println, "A");
+  } else if (SENSOR_B_ID == data) {
+    Debug(println, "B");
+  } else if (SENSOR_C_ID == data) {
+    Debug(println, "C");
+  } else {
+    Debug(println, "Not recognized");
+  }
 }
 
 // Sends out a half-TICK ping of HIGH down the OUT_PIN
