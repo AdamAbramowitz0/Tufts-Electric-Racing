@@ -10,41 +10,48 @@
 #ifndef _BITVECTOR_
 #define _BITVECTOR_
 
+#include <string>
+
 // experimental, don't use yet
-class BitVector {
+class BitVector
+{
 
 public:
-
   // unsigned long long constructor
-  BitVector(unsigned long long b, size_t s) {
+  BitVector(unsigned long long b, size_t s)
+  {
+
     size_t numBytes = s / 8 + 1;
 
     bytes = new byte[numBytes];
     size = s;
 
-
-    for (size_t i = 0; i < numBytes; i++)  // clear bytes
+    for (size_t i = 0; i < numBytes; i++) // clear bytes
       bytes[i] = 0;
 
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++)
+    {
       bitWrite(bytes[i / 8], i, bitRead(b, i));
     }
   }
 
   // string constructor
-  BitVector(String str) {
+  BitVector(String str)
+  {
     size_t numBytes = str.length() / 8 + 1;
 
     bytes = new byte[numBytes];
     size = str.length();
 
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++)
+    {
       bitWrite(bytes[i / 8], i, str[i] - '0');
     }
   }
 
   // copy constructor
-  BitVector(const BitVector &other) {
+  BitVector(const BitVector &other)
+  {
     size = other.size;
     size_t numBytes = size / 8 + 1;
     bytes = new byte[numBytes];
@@ -54,7 +61,8 @@ public:
   }
 
   // assignment operator
-  BitVector &operator=(const BitVector &rhs) {
+  BitVector &operator=(const BitVector &rhs)
+  {
     delete[] bytes;
 
     size = rhs.size;
@@ -67,11 +75,13 @@ public:
     return *this;
   }
 
-  bool operator==(const BitVector &rhs) const {
+  bool operator==(const BitVector &rhs) const
+  {
     if (size != rhs.size)
       return false;
 
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++)
+    {
       if (bytes[i] != rhs.bytes[i])
         return false;
     }
@@ -79,15 +89,18 @@ public:
     return true;
   }
 
-  size_t length() const {
+  size_t length() const
+  {
     return size;
   }
 
-  bool operator[](size_t index) const {
+  bool operator[](size_t index) const
+  {
     return bitRead(bytes[index / 8], index % 8);
   }
 
-  ~BitVector() {
+  ~BitVector()
+  {
     delete[] bytes;
   }
 

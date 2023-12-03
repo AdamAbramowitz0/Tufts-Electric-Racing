@@ -60,10 +60,10 @@ struct Bits {
 
   // to string; e.g. 0b0011 -> "1100"
   String str() const {
-    String s(size, '*');
+    String s(size);
 
     for (uint8_t i = 0; i < size; i++) {
-      s[i] = bitRead(bits, i) + '0';  // convert 0 or 1 to '0' or '1'
+      s[i] = (char)(bitRead(bits, i) + '0');  // convert 0 or 1 to '0' or '1'
     }
     return s;
   }

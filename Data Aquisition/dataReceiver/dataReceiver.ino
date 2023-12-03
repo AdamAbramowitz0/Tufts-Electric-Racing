@@ -13,8 +13,8 @@ const bool DEBUG_MODE = true;  // set to false if Serial output is not wanted
 
 
 const unsigned long TICK = 100;  // milliseconds per bit
-const uint8_t OUT_PIN;           // a digital pin to send request pings via
-const uint8_t IN_PIN;            // a digital pin to receive data via
+const uint8_t OUT_PIN = 12;      // a digital pin to send request pings via TODO fill
+const uint8_t IN_PIN = 11;       // a digital pin to receive data via TODO fill
 
 const Bits SENSOR_A_ID = Bits("1010");
 const Bits SENSOR_B_ID = Bits("1111");
@@ -22,7 +22,7 @@ const Bits SENSOR_C_ID = Bits("0000");
 
 void setup() {
   Debug(begin, 9600);
-  Debug(println, "DEBUGGING MODE ON");
+  Debug(println, "\nDEBUGGING MODE ON");
 
   pinMode(OUT_PIN, OUTPUT);
   pinMode(IN_PIN, INPUT);
@@ -34,23 +34,22 @@ void loop() {
   Bits data(0, 4);
   pingRequest();
 
-
   for (int i = 0; i < 4; i++) {
     bitWrite(data(), i, digitalRead(IN_PIN));
     delay(TICK);
   }
 
-  Debug(println, data.str());
+  Debug(println, "DATA: "+ data.str());
 
-  if (SENSOR_A_ID == data) {
-    Debug(println, "A");
-  } else if (SENSOR_B_ID == data) {
-    Debug(println, "B");
-  } else if (SENSOR_C_ID == data) {
-    Debug(println, "C");
-  } else {
-    Debug(println, "Not recognized");
-  }
+  // if (SENSOR_A_ID == data) {
+  //   Debug(println, "A");
+  // } else if (SENSOR_B_ID == data) {
+  //   Debug(println, "B");
+  // } else if (SENSOR_C_ID == data) {
+  //   Debug(println, "C");
+  // } else {
+  //   Debug(println, "Not recognized");
+  // }
 }
 
 // Sends out a half-TICK ping of HIGH down the OUT_PIN

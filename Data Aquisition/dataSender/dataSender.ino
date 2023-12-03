@@ -43,7 +43,7 @@ void setup() {
 
   // setup output line
   pinMode(OUT_PIN, OUTPUT);
-  // pinMode(IN_PIN, INPUT); // TODO: CURRENTLY, INPUT PIN IS UNDEFINED
+  pinMode(IN_PIN, INPUT); // TODO: NOT DECIDED
 
   // initial silence
   digitalWrite(OUT_PIN, LOW);
