@@ -13,8 +13,8 @@ const bool DEBUG_MODE = true;  // set to false if Serial output is not wanted
 
 
 const unsigned long TICK = 100;  // milliseconds per bit
-const uint8_t REQUEST_PIN = 12;      // a digital pin to send request pings via TODO fill
-const uint8_t DATA_PIN = 11;       // a digital pin to receive data via TODO fill
+const uint8_t REQUEST_PIN = 12;  // a digital pin to send request pings via
+const uint8_t DATA_PIN = 11;     // a digital pin to receive data via
 
 const Bits SENSOR_A_ID = Bits("1010");
 const Bits SENSOR_B_ID = Bits("1111");
@@ -39,7 +39,7 @@ void loop() {
     delay(TICK);
   }
 
-  Debug(println, "DATA: "+ data.str());
+  Debug(println, "DATA: " + data.str());
 
   if (SENSOR_A_ID == data) {
     Debug(println, "A");
