@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<h2>Wheel Speed</h2>
+<h2 id = 'wheelspeed'></h2>
+<h2>Ride Height</h2>
+<h2 id = 'rideheight'></h2>
+<div>
+  </div>
+
+  <script>
+    runner()
+    function runner(){
+        console.log("HIT")
+        const Http = new XMLHttpRequest();
+        const url='http://localhost:8000/data';
+        Http.open("GET", url);
+        Http.send();
+
+        Http.onreadystatechange = () => {
+        var myJson = JSON.parse(Http.responseText)
+        if(myJson["wheelspeed"] == -1){
+          document.getElementById('rideheight').innerHTML = myJson["rideheight"]
+        }
+        else{
+          document.getElementById('wheelspeed').innerHTML = myJson["wheelspeed"]
+
+        }
+          
+        }
+        setTimeout(runner,10)
+
+
+
+}
+
+
+ 
+  </script>
+</html>

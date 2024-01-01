@@ -10,41 +10,48 @@ numberOfSensors = 1
 sensorArray = ["TIMER?"]
 theQueue = []
 keepRunning = True
-#list1 = []
-#list2 = []
+bitsPerSecond = 100000
+list1 = []
+list2 = []
+lock = threading.Lock()
 #df = pandas.DataFrame(data={'col1': list1, 'col2': list2})
 
 #ui.table.from_pandas(df).classes('max-h-40')
 
 line_plot = ui.line_plot(n=numberOfSensors, limit=20, figsize=(15,10), update_every=1).with_legend(sensorArray, loc='upper center')
 
+ 
+
+def updateGraph(iteration, milis):
+    #lock.acquire()
+    line_plot.push(iteration,[milis])
+    #lock.release()
+    #print("done")
 
 
-def updateGraph():
-    iteration = 0
-    while(keepRunning):
-
-       
-        iteration+=1
-        if((not (len(theQueue)<=1))):
-            line_plot.push([float(theQueue.pop())],[[float(theQueue.pop())]])
         
-        time.sleep(.01)
-
 def fillQueue():
+    iterations = []
+    seconds = []
     iteration = 0
+
     while(keepRunning):
+        #print("HIT")
         iteration+=1
-        second = datetime.datetime.now().strftime("%s")
         
-        theQueue.insert(0,iteration)
-        theQueue.insert(0,second)
-    
-        time.sleep(.1)
+        second = datetime.datetime.now().strftime("%f") 
+
+        iterations.append(float(iteration))
+        seconds.append(float(second))
+        #print("opened")
+        if(iteration%bitsPerSecond == 0):
+            threading.Thread(target = updateGraph, args=(iterations, seconds)).start()
+            iterations.clear()
+            seconds.clear()
+        
+        time.sleep(float(1/bitsPerSecond))
 
 
-threadReadingTime = threading.Thread(target = fillQueue)
-threadUpdatingGraph = threading.Thread(target = updateGraph)
 
 
 
@@ -55,9 +62,7 @@ def updateFunc():
 
 
 ui.button('Update', on_click = lambda: updateFunc())
-
-threadReadingTime.start()
-threadUpdatingGraph.start()
+threading.Thread(target = fillQueue).start()
 ui.run()
 
 
