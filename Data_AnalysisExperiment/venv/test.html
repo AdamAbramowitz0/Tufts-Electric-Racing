@@ -2,9 +2,12 @@
 <html>
 
 <h2>Wheel Speed</h2>
-<h2 id = 'wheelspeed'></h2>
+<h2 id = 'Wheel Speed'></h2>
 <h2>Ride Height</h2>
-<h2 id = 'rideheight'></h2>
+<h2 id = 'Ride Height'></h2>
+<h2>Temperature</h2>
+<h2 id = 'Temperature'></h2>
+
 <div>
   </div>
 
@@ -19,19 +22,17 @@
 
         Http.onreadystatechange = () => {
         var myJson = JSON.parse(Http.responseText)
-        if(myJson["wheelspeed"] == -1){
-          document.getElementById('rideheight').innerHTML = myJson["rideheight"]
-        }
-        else{
-          document.getElementById('wheelspeed').innerHTML = myJson["wheelspeed"]
 
-        }
-          
-        }
-        setTimeout(runner,10)
+     
+        document.getElementById(myJson["strID"]).innerHTML = myJson["Value"]
+        console.log(myJson["val"])
+  
+        
+      }
+      setTimeout(runner,10)  
 
 
-
+        
 }
 
 
