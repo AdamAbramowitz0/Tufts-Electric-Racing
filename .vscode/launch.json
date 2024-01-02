@@ -9,7 +9,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "test.html",
-            "file": "/Users/adamabramowitz/Desktop/Everything_Coding/FormulaElectric/Tufts-Electric-Racing/Data_AnalysisExperiment/venv/ANOTHERTEXT.html"
+            "file": "/Users/adamabramowitz/Desktop/Everything_Coding/FormulaElectric/Tufts-Electric-Racing/Data_AnalysisExperiment/venv/test.html"
         }
     ]
 }

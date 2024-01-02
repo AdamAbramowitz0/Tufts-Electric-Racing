@@ -19,11 +19,15 @@ class MyServerClass(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/html")
             self.end_headers()
             testStr=""
-            for i in sensors:
-                testStr+="<h2>"+i+"</h2><h2 id='"+i+"'></h2>"
-            myStr = "<!DOCTYPE html><html>" + testStr+"<div></div><script>runner();function runner(){console.log('HIT');const Http=new XMLHttpRequest();const url='http://localhost:8000/data';Http.open('GET',url);Http.send();Http.onreadystatechange=()=>{var myJson=JSON.parse(Http.responseText);document.getElementById(myJson['strID']).innerHTML=myJson['Value'];console.log(myJson['val']);};setTimeout(runner,10);}</script></html>"
-            self.wfile.write(bytes(myStr,'utf-8'))
-
+            with open("test.html",'rb') as file:
+                self.wfile.write(file.read())
+        elif(self.path == '/setup'):
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")#doesent really matter here
+            self.end_headers()
+            dataToSend = {"sensors":sensors,"numSensors":len(sensors)}
+            stringToSend = json.dumps(dataToSend)
+            self.wfile.write(bytes(stringToSend,'utf-8'))
         elif(self.path == '/data'):
             self.send_response(200)
             self.send_header("Content-type", "text/html")#doesent really matter here

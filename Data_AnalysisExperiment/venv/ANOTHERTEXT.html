@@ -5,18 +5,6 @@
 <button id="RefreshState">Click Here To Update Graph</button>
 
 <script>
-  document.getElementById("RefreshState").addEventListener('click', function() {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', "http://localhost:8000/data", true);
-    
-    xhr.onload = function() {
-        addData(x,'tango', int(xhr.responseText))
-        removeData(x)
-        chart.update();
-        console.log("HIT")        // Further processing of xhr.responseText here if needed
-    };
 
-    xhr.send();
-  });
 </script>
 </html>
