@@ -5,7 +5,6 @@ import threading,time,json
 from queue import Queue
 import pandas as pd
 
-myQueue = Queue()
 lock = threading.Lock()
 ws = []
 rh = []
@@ -32,8 +31,8 @@ class MyServerClass(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-type", "text/html")#doesent really matter here
             self.end_headers()
-            while myQueue.qsize == 0:
-                print("YO")
+            #while myQueue.qsize == 0:
+                #print("YO")
         
             z = {
                 "strID": curr[0],
@@ -44,66 +43,76 @@ class MyServerClass(BaseHTTPRequestHandler):
             #print(jsonString)
             self.wfile.write(bytes(jsonString,'utf-8'))
             
-     
+ 
+theServer = HTTPServer(('localhost',8000),MyServerClass)
 
 def usbListener():
-    #while True:
     global curr
     global sensors
     mySocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     mySocket.bind(("localhost",8084))
-    mySocket.listen()
-    theSock,retAddr = mySocket.accept()
-    numSensors = theSock.recv(1)[0]
-    
-    freqs = []
-    maxFreq = 0
-
-    for z in range(0,numSensors):
-        sizeToRec = theSock.recv(1)[0]
-        print(sizeToRec)
-        sensor = str(theSock.recv(sizeToRec),'utf-8')
-        print(sensor)
-        overflow = theSock.recv(1)[0]
-        print(overflow)
-        freq = overflow*256 + theSock.recv(1)[0]
-        if freq > maxFreq:
-            maxFreq = freq
+    while True:
+        mySocket.listen()
+        theSock,retAddr = mySocket.accept()
+        numSensors = theSock.recv(1)[0]
         
-        sensors.append(sensor)
-        freqs.append(freq)
-    dictionary = {}
-    for i in sensors:
-        dictionary[i] = [0]
-    dictionary["time"] = [0]
-    counter = 0
+        freqs = []
+        maxFreq = 0
 
-
-
-    threading.Thread(target = theServer.serve_forever).start()
-
-    while counter < 5000:
-        sizeToRec = theSock.recv(1)
-        part = str(theSock.recv(sizeToRec[0]),'utf-8')
-        value = theSock.recv(1)[0]
-        dictionary[part].append(value)
+        for z in range(0,numSensors):
+            sizeToRec = theSock.recv(1)[0]
+            print(sizeToRec)
+            sensor = str(theSock.recv(sizeToRec),'utf-8')
+            print(sensor)
+            overflow = theSock.recv(1)[0]
+            print(overflow)
+            freq = overflow*256 + theSock.recv(1)[0]
+            if freq > maxFreq:
+                maxFreq = freq
+            
+            sensors.append(sensor)
+            freqs.append(freq)
+        dictionary = {}
         for i in sensors:
-            if (i != part):
-                dictionary[i].append(dictionary[i][len(dictionary[i])-1])
-        dictionary["time"].append(float(counter/maxFreq))
-        with lock:
-            curr = [part, value]
-        print(part)
-        print(value)
-        time.sleep(1/maxFreq)#freq/2?
-        counter +=1
+            dictionary[i] = [0]
+        dictionary["time"] = [0]
+        counter = 0
 
-    df = pd.DataFrame.from_dict(dictionary)
+        
+        
+        theThread = threading.Thread(target = theServer.serve_forever, args=(5,))
+        theThread.start()
 
-    df.to_excel("ModularTest.xlsx")
+        while True:
+            try:
+                sizeToRec = theSock.recv(1)
+                part = str(theSock.recv(sizeToRec[0]),'utf-8')
+                value = theSock.recv(1)[0]
+                dictionary[part].append(value)
+                for i in sensors:
+                    if (i != part):
+                        dictionary[i].append(dictionary[i][len(dictionary[i])-1])
+                dictionary["time"].append(float(counter/maxFreq))
+                with lock:
+                    curr = [part, value]
+                print(part)
+                print(value)
+                time.sleep(1/maxFreq)#freq/2?
+                counter += 1
+            except:
+                break
+        
+       
+        df = pd.DataFrame.from_dict(dictionary)
+        df.to_excel("ModularTest.xlsx")
+        sensors = []
+        curr = []
+        #IDK
+        theServer.shutdown()
+     
+        theThread.join()
 
 
-theServer = HTTPServer(('localhost',8000),MyServerClass)
 
 threading.Thread(target = usbListener).start()
 

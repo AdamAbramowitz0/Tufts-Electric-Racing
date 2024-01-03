@@ -2,8 +2,8 @@ import socket
 import time
 import random
 #User Sets
-arrayOfBytes = [bytes("Wheel-Speed",'utf-8'), bytes("Ride Height",'utf-8'), bytes("Temperature",'utf-8'),bytes("Moisture",'utf-8')]
-frequencyHz = [1000,100,1,20]
+arrayOfBytes = [bytes("Temperature",'utf-8'),bytes("Moisture",'utf-8'),bytes("Wheel Speed",'utf-8')]
+frequencyHz = [10,1,1000]
 largestFreq = 1000
 mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
