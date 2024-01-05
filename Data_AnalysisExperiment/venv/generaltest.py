@@ -1,10 +1,19 @@
-print(bytes(str(18),'utf-8'))
-print(bytes([255]))
-arrayOfBytes = [bytes("Wheel Speed",'utf-8'), bytes("Ride Height",'utf-8'), bytes("Temperature",'utf-8')]
-print(arrayOfBytes[1])
-print(len(arrayOfBytes[0]))
+import socket
+import time
+import random
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
+from matplotlib.animation import FuncAnimation
+import pandas as pd
+from decimal import *
+import threading
+
+lock = threading.Lock()
 
 
-myDict = {}
-myDict["NEW THING"] = [12]
-print(myDict)
+
+#USER SETS THE FOLLOWING
+sensors = ["TemperatureRR","Moisture","Wheel Speed"]
+frequencyHz = [10,1,10]
+largestFreq = 10

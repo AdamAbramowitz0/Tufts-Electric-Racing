@@ -85,6 +85,7 @@ def usbListener():
 
         while True:
             try:
+                print("HERHERHERHERH")
                 sizeToRec = theSock.recv(1)
                 part = str(theSock.recv(sizeToRec[0]),'utf-8')
                 value = theSock.recv(1)[0]
@@ -100,6 +101,7 @@ def usbListener():
                 time.sleep(1/maxFreq)#freq/2?
                 counter += 1
             except:
+                print("THIS IS WHERE IT BROKE")
                 break
         
        
