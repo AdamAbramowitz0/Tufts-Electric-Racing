@@ -4,6 +4,7 @@
 import handleGraph
 import handleWeb
 import handleRead
+import threading
 
 #USER SETS THE FOLLOWING
 sensors = ["Linear Acceleration", "Euler 1", "Euler 2", "Euler 3"]
