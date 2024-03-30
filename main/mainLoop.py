@@ -36,9 +36,17 @@ while(True):
 
         # SPI network:
         spi = spidev.SpiDev()
+        spi.max_speed_hz = 5000
+        spi.open(bus=0, device=1)
+        WIDTH = 128
+        HEIGHT = 64
+        BORDER = 5
+        DC = 23
+        CS = 24
+        reset_pin = digitalio.DigitalInOut(board.D0)
+        oled = adafruit_ssd1306.SSD1306_SPI(WIDTH, HEIGHT, spi, DC, reset_pin, CS)
+
         # spi.open(bus, device)
-        spi.max_speed_hz = 500_000
-        spi.mode = 0
 
         # GPIO pins:
         # GPIO 12 - pump 1
@@ -67,5 +75,6 @@ while True:
         # handle peripherals (e.g. pumps, fans, lights, etc.)
         # update displays
         # send whatever to radio
+        pass
     except Exception as e:
         print(e)
