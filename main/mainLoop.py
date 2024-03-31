@@ -35,18 +35,14 @@ while(True):
         # battery box moisture sensor 2
 
         # SPI network:
-        spi = spidev.SpiDev()
-        spi.max_speed_hz = 5000
-        spi.open(bus=0, device=1)
-        WIDTH = 128
-        HEIGHT = 64
-        BORDER = 5
-        DC = 23
-        CS = 24
-        reset_pin = digitalio.DigitalInOut(board.D0)
-        oled = adafruit_ssd1306.SSD1306_SPI(WIDTH, HEIGHT, spi, DC, reset_pin, CS)
-
-        # spi.open(bus, device)
+        DISPLAY_HEIGHT = 64
+        DISPLAY_WIDTH = 128
+        spi = board.SPI()
+        oled_reset = digitalio.DigitalInOut(board.D4)
+        oled_cs = digitalio.DigitalInOut(board.D5)
+        oled_dc = digitalio.DigitalInOut(board.D6)
+        oled_reset = digitalio.DigitalInOut(board.D4)
+        oled = adafruit_ssd1306.SSD1306_SPI(DISPLAY_WIDTH, DISPLAY_HEIGHT, spi, oled_dc, oled_reset, oled_cs)
 
         # GPIO pins:
         # GPIO 12 - pump 1
@@ -74,6 +70,9 @@ while True:
         # get sensor data
         # handle peripherals (e.g. pumps, fans, lights, etc.)
         # update displays
+        img = Image.new("1", (oled.width, oled.height))
+        draw = ImageDraw.Draw(img)
+            # draw.rectangle or whatever
         # send whatever to radio
         pass
     except Exception as e:
