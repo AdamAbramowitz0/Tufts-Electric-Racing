@@ -35,6 +35,8 @@ while(True):
         # SPI network:
         DISPLAY_HEIGHT = 64
         DISPLAY_WIDTH = 128
+        WHITE = 255
+        BLACK = 0
         spi = board.SPI()
         spi_reset = digitalio.DigitalInOut(board.D4)
         spi_cs = digitalio.DigitalInOut(board.D5)
@@ -42,8 +44,7 @@ while(True):
         spi_reset = digitalio.DigitalInOut(board.D4)
         oled = adafruit_ssd1306.SSD1306_SPI(DISPLAY_WIDTH, DISPLAY_HEIGHT, spi, spi_dc, spi_reset, spi_cs)
         font = ImageFont.load_default()
-        WHITE = 255
-        BLACK = 0
+        # TODO figure out fucking chip select in SPI
 
         # GPIO pins:
         # GPIO 12 - pump 1
@@ -54,22 +55,23 @@ while(True):
         # Temperature?
 
         # other set up:
-        # Radio
+        # Radio misc.
         # IMU zero-ing via initial measurements, possibly
 
         break # everything init'd without breaking
     except Exception as e:
         print(e)
 
-
-# bno1.enable_feature(BNO_REPORT_ACCELEROMETER)
-# bno2.enable_feature(BNO_REPORT_ACCELEROMETER)
-
-# loop
+# MAIN LOOP
 while True:
     try:
-        # get sensor data
-        # handle peripherals (e.g. pumps, fans, lights, etc.)
+        ############# PERIPHERALS ################
+            # pumps
+            # fans
+            # break lights
+            # horn
+
+        ############## DISPLAYS #################
         #clear display
         oled.fill(BLACK)
         oled.show()
@@ -79,7 +81,7 @@ while True:
             # draw.rectangle or whatever
         oled.image(img)
         oled.show()
+
         # send whatever to radio
-        pass
     except Exception as e:
         print(e)
