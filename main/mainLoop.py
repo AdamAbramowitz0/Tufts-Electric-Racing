@@ -5,8 +5,6 @@ import serial
 import board
 import RPi.GPIO as GPIO
 import busio
-import spidev
-
 
 # for displays
 import digitalio
@@ -38,11 +36,14 @@ while(True):
         DISPLAY_HEIGHT = 64
         DISPLAY_WIDTH = 128
         spi = board.SPI()
-        oled_reset = digitalio.DigitalInOut(board.D4)
-        oled_cs = digitalio.DigitalInOut(board.D5)
-        oled_dc = digitalio.DigitalInOut(board.D6)
-        oled_reset = digitalio.DigitalInOut(board.D4)
-        oled = adafruit_ssd1306.SSD1306_SPI(DISPLAY_WIDTH, DISPLAY_HEIGHT, spi, oled_dc, oled_reset, oled_cs)
+        spi_reset = digitalio.DigitalInOut(board.D4)
+        spi_cs = digitalio.DigitalInOut(board.D5)
+        spi_dc = digitalio.DigitalInOut(board.D6)
+        spi_reset = digitalio.DigitalInOut(board.D4)
+        oled = adafruit_ssd1306.SSD1306_SPI(DISPLAY_WIDTH, DISPLAY_HEIGHT, spi, spi_dc, spi_reset, spi_cs)
+        font = ImageFont.load_default()
+        WHITE = 255
+        BLACK = 0
 
         # GPIO pins:
         # GPIO 12 - pump 1
@@ -69,10 +70,15 @@ while True:
     try:
         # get sensor data
         # handle peripherals (e.g. pumps, fans, lights, etc.)
-        # update displays
+        #clear display
+        oled.fill(BLACK)
+        oled.show()
+        # draw shit for displaying
         img = Image.new("1", (oled.width, oled.height))
         draw = ImageDraw.Draw(img)
             # draw.rectangle or whatever
+        oled.image(img)
+        oled.show()
         # send whatever to radio
         pass
     except Exception as e:
