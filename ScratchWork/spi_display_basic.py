@@ -11,8 +11,6 @@ BORDER = 5
 
 bus = 0
 device = 1
-DC = 23
-CS = 24
 
 
 spi = busio.SPI(board.SCK, MOSI=board.MOSI)
