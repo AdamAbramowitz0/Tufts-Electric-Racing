@@ -10,19 +10,14 @@ from adafruit_bus_device.i2c_device import I2CDevice
 # for displays
 import digitalio
 from PIL import Image, ImageDraw, ImageFont
-
-
-
-from adafruit_bno08x.i2c import BNO08X_I2C
-from adafruit_bno08x import BNO_REPORT_ACCELEROMETER
 import adafruit_ssd1306
 
-# TCA9543A_I2C_ADDR_R = 0b1110_0001 # read mode
-TCA9543A_ADDR = 0b1110_0000
-CHANNEL_0 = 0b0000_0001  # Enable channel 0
-CHANNEL_1 = 0b0000_0010  # Enable channel 1
+# wheel accelerometers
+from adafruit_bno08x.i2c import BNO08X_I2C
+from adafruit_bno08x import BNO_REPORT_ACCELEROMETER
 
-
+# ADCs
+from MCP342x import MCP342x # TODO: install?
 
 
 # init (loops until success)
@@ -30,10 +25,11 @@ while(True):
     try:
         # I2C network:
         i2c = busio.I2C(board.SCL, board.SDA)
-        # I2C_switch_read = I2CDevice(i2c, TCA9543A_I2C_ADDR_R) # read mode
+        # I2C Switch
+        TCA9543A_ADDR = 0b1110_0000 # this is for writing; set last addr bit to 1 for reading
         I2C_Switch = I2CDevice(i2c, TCA9543A_ADDR)
-        # I2C switch
         # ADC on network 1
+
         # ADC on network 2
         # Main body IMU
         # FL wheel IMU
@@ -47,14 +43,12 @@ while(True):
         DISPLAY_WIDTH = 128
         WHITE = 255
         BLACK = 0
-        spi = board.SPI()
-        spi_reset = digitalio.DigitalInOut(board.D4)
-        spi_cs = digitalio.DigitalInOut(board.D5)
-        spi_dc = digitalio.DigitalInOut(board.D6)
-        spi_reset = digitalio.DigitalInOut(board.D4)
-        oled = adafruit_ssd1306.SSD1306_SPI(DISPLAY_WIDTH, DISPLAY_HEIGHT, spi, spi_dc, spi_reset, spi_cs)
+        spi = busio.SPI(board.SCK, MOSI=board.MOSI)
+        spi_reset_pin = digitalio.DigitalInOut(board.D4) # any pin!
+        spi_cs_pin = digitalio.DigitalInOut(board.D5)    # any pin! TODO NEED 2 chip selects, 1 PER DISPLAY?
+        spi_dc_pin = digitalio.DigitalInOut(board.D6)    # any pin!
+        oled = adafruit_ssd1306.SSD1306_SPI(DISPLAY_WIDTH, DISPLAY_HEIGHT, spi, spi_dc_pin, spi_reset_pin, spi_cs_pin)
         font = ImageFont.load_default()
-        # TODO figure out fucking chip select in SPI
 
         # GPIO pins:
         # GPIO 12 - pump 1

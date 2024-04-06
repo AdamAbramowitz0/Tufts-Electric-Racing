@@ -9,10 +9,6 @@ WIDTH  = 128
 HEIGHT = 64
 BORDER = 5
 
-bus = 0
-device = 1
-
-
 spi = busio.SPI(board.SCK, MOSI=board.MOSI)
 reset_pin = digitalio.DigitalInOut(board.D4) # any pin!
 cs_pin = digitalio.DigitalInOut(board.D5)    # any pin!
